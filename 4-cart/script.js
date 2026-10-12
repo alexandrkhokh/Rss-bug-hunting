@@ -23,6 +23,7 @@ function renderProducts() {
     card.className = "product";
     card.innerHTML = `<h3>${p.name}</h3><p>${p.price} ₽</p>`;
     const btn = document.createElement("button");
+    btn.id = p.id;
     btn.textContent = "В корзину";
     btn.addEventListener("click", addToCart);
     card.appendChild(btn);
@@ -30,8 +31,9 @@ function renderProducts() {
   });
 }
 
-function addToCart(id) {
-  const product = products.find((p) => p.id === id);
+function addToCart(event) {
+  const id = event.target.id;
+  const product = products.find((p) => p.id === Number(id));
   if (!product) {
     return;
   }
