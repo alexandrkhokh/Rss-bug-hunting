@@ -34,7 +34,7 @@ function deleteTask(id) {
 }
 
 function clearCompleted() {
-  tasks = [];
+  tasks = tasks.filter((t) => t.done === false);
   render();
 }
 
@@ -47,7 +47,16 @@ function updateCounter() {
 }
 
 function render() {
-  const visible = getVisibleTasks();
+  let visible;
+
+  if(currentFilter === 'active') {
+    visible = getVisibleTasks().filter(t => t.done === false);
+  } else if (currentFilter === 'done') {
+    visible = getVisibleTasks().filter(t => t.done === true);
+  } else {
+    visible = getVisibleTasks()
+  }
+
   const fr = new DocumentFragment();
 
   for (let i = 0; i < visible.length; i++) {
