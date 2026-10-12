@@ -77,13 +77,21 @@ function applyPromo() {
 }
 
 function clearCart() {
-  cart.splice(0, 1);
+  cart = [];
   renderCart();
 }
 
 function renderCart() {
   cartItemsEl.innerHTML = "";
   let total = 0;
+
+  if (cart.length === 0) {
+    emptyMsg.hidden = false;
+    totalEl.textContent = total;
+    return;
+  }
+
+
   cart.forEach((item) => {
     const lineTotal = item.price  * item.qty;
     const li = document.createElement("li");
