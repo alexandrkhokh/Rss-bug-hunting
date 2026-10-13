@@ -23,17 +23,17 @@ function getFiltered() {
   const sort = sortSelect.value;
 
   if (search) {
-    result = result.filter((p) => p.name === search);
+    result = result.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
   }
 
   if (category !== "all") {
-    result = products.filter((p) => p.category !== category);
+    result = result.filter((p) => p.category === category);
   }
 
-  if (sort === "asc") {
-    result.sort((a, b) => b.price - a.price);
-  } else if (sort === "desc") {
-    result.sort((a, b) => a.price - b.price);
+  if (sort === "desc") {
+    result = result.toSorted((a, b) => b.price - a.price);
+  } else if (sort === "asc") {
+    result = result.toSorted((a, b) => a.price - b.price);
   }
 
   return result;
@@ -41,13 +41,16 @@ function getFiltered() {
 
 function render() {
   const items = getFiltered();
+  const wrapper = new DocumentFragment();
+
   items.forEach((p) => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `<h3>${p.name}</h3><p class="cat">${p.category}</p><p class="price">$${p.price}</p>`;
-    grid.appendChild(card);
+    wrapper.appendChild(card);
   });
-  countEl.textContent = products.length;
+  grid.replaceChildren(wrapper)
+  countEl.textContent = items.length;
 }
 
 searchInput.addEventListener("input", render);
@@ -55,5 +58,10 @@ categorySelect.addEventListener("change", render);
 sortSelect.addEventListener("change", render);
 
 resetBtn.addEventListener("click", () => {
-  searchInput.value = "";
+  searchInput.value = '';
+  sortSelect.value = 'default';
+  categorySelect.value = 'all'
+  render();
 });
+
+render();
